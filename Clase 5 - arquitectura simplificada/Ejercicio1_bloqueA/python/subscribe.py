@@ -32,23 +32,16 @@ def subscribe(client):
             temperature_value = dataRecived["value"]
             sensor_id = dataRecived["device_id"]
             type_tag = dataRecived["type"]
-            
-            #temperature.append(data)
-            #print(f"Cantidad de valores recibidos: {len(temperature)}")
-            #print("Valor máximo:", max(temperature))
-            #print(f"Valor minimo: { min(temperature) }")
-            #print(f"Valor promedio: {sum(temperature)/len(temperature)}")
-
+             
             point = (
                 Point(sensor_id)
-                .field("temperatura", temperature_value) #información clave
-                .tag("type", type_tag)        #información de contexto, que ayude a entender la medida    
+                .field("temperatura", temperature_value)    #información clave
+                .tag("type", type_tag)                      #información de contexto, que ayude a entender la medida    
             )
             write_api.write(bucket=bucket, org="mario.villanueva.gutierrez@gmail.com", record=point)
    
 
-        except Exception as ex:
-            #print(f"error: {ex}")
+        except Exception as ex: 
             i = 0
 
     client.subscribe(topic)
