@@ -57,7 +57,7 @@ void loop(){
     if (client.connected())
     {
       doc["device_id"] = "sensorMEVG";
-      doc["type"] = "Temperature";
+      doc["type"] = "temperature";
       doc["value"] = temperatureValue;
       String serializedJSON;
       serializeJson(doc, serializedJSON);
