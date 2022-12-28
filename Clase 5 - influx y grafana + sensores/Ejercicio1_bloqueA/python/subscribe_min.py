@@ -19,22 +19,21 @@ write_api = client.write_api(write_options=SYNCHRONOUS)
 
 
 
-def on_message(client, userdata, msg): #callback que sobre escribimos
+def on_message(client, userdata, message): #callback que sobre escribimos
     try:
-        dataRecived = json.loads(msg.payload)
-        print(msg) 
+
+        print("message received " ,str(message.payload.decode("utf-8")))
+        print("message topic=",message.topic)
+        print("message qos=",message.qos)
+        print("message retain flag=",message.retain)
+        print("userdata= ",userdata)
+
+        dataRecived = json.loads(message.payload)         
 
         temperature_value = dataRecived["value"] 
         print(temperature_value)
         
-            
-        # point = (
-        #     Point(sensor_id)
-        #     .field("temperatura", temperature_value)    #información clave
-        #     .tag("type", type_tag)                      #información de contexto, que ayude a entender la medida    
-        # )
-        # write_api.write(bucket=bucket, org="mario.villanueva.gutierrez@gmail.com", record=point)
-
+        
 
     except Exception as ex: 
         i = 0
