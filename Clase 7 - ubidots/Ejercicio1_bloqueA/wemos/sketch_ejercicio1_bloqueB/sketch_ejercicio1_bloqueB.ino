@@ -21,6 +21,7 @@ char clientId[50];
 
 
 DynamicJsonDocument json(1024); 
+JsonObject context = json.createNestedObject("context");
 char* topicBase = "/v1.6/devices/sensormevg";
 char topicSensor[200]; 
 
@@ -33,7 +34,7 @@ float temperatureAcumulate = 0;
 int sensoresCount = 0;
 float humedityValue = 10;
 const char* mqtt_password = "";
-const char* mqtt_user = "BBFF-ff1kVAWEmxqKwWVRyayiCY72AdTPMM";
+const char* mqtt_user = "**";
 
 void setup(){
     Serial.begin(115200);
@@ -77,9 +78,13 @@ void loop(){
     if (client.connected())
     { 
       sendTemperature();
+      delay(2000);
       sendTemperatureMax();
+      delay(2000);
       sendTemperatureMin();
+      delay(2000);
       sendTemperatureAvg();
+      delay(2000);
       sendHumedity();
       
     }
@@ -102,11 +107,16 @@ void send(char* topicValue, float value)
   strcpy(topicSensor,topicBase);
   strcat(topicSensor,topicValue);  
   json["value"] = value;
-  json["context"] ="{\"lat\":-6.2, \"lng\":75.4}";
+
+  
+  context["lat"] = -6.2 + sensoresCount ;
+  context["long"] = -8.2 + sensoresCount;  
+
   String serializedJSON;
   serializeJson(json, serializedJSON);
   client.publish(topicSensor,serializedJSON.c_str());  
   Serial.print(topicSensor);
+  Serial.print(serializedJSON.c_str());
   Serial.println(" send ok");
 }
 
@@ -117,7 +127,7 @@ void sendTemperatureMax()
     temperatureMax = temperatureValue;
   }
 
-  char* sensorName = "/temperature/max";  
+  char* sensorName = "/temperature-max";  
   send(sensorName, temperatureMax);    
 }
 
@@ -134,7 +144,7 @@ void sendTemperatureMin()
     temperatureMin = temperatureValue;
   }
 
-  char* sensorName = "/temperature/min";  
+  char* sensorName = "/temperature-min";  
   send(sensorName, temperatureMin);    
 }
 
@@ -143,7 +153,7 @@ void sendTemperatureAvg()
   temperatureAcumulate += temperatureValue;
   
 
-  char* sensorName = "/temperature/avg";  
+  char* sensorName = "/temperature-avg";  
   send(sensorName, temperatureAcumulate/sensoresCount);    
 }
 
